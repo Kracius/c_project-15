@@ -1,0 +1,86 @@
+#include <iostream>
+
+bool canMove(char **m, const int row, int j) {
+    int newRow;
+    newRow = row - 1;
+    if (m[newRow][j + 1] == '#' && m[newRow][j - 1] == '#' || m[newRow][j - 1] == ' ' && m[newRow][j + 1] == '#') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void mazeGenerator(char **maze, const int row, const int col) {
+    int i, j;
+
+    for (i = 0; i < row; i++) {
+        if (i == 0 || i == row - 1) {
+            for (j = 0; j < row; j++) {
+                maze[i][j] = '#';
+            }
+        }
+        else if (i == 1) {
+            for (j = 0; j < col; j++) {
+                if (j == 0 || j == col - 1) {
+                    maze[i][j] = '#';
+                    continue;
+                } else if (j > 0 && j < col - 1) {
+                    if ((rand() % 2) == 0) {
+                        maze[i][j] = '#';
+                        continue;
+                    } else {
+                        maze[i][j] = ' ';
+                        continue;
+                    }
+                }
+            }
+        }
+        else if (i > 1 && i < row - 1) {
+            for (j = 0; j < col; j++) {
+                if (j == 0 || j == col - 1) {
+                    maze[i][j] = '#';
+                    continue;
+                } else if (j > 0 && j < col - 1) {
+                    if ((rand() % 2) == 0) {
+                        if (canMove(maze, i, j)) {
+                            maze[i][j++] = ' ';
+                            maze[i][j] = '#';
+                            continue;
+                        } else {
+                            maze[i][j] = '#';
+                            continue;
+                        }
+                    } else {
+                        maze[i][j] = ' ';
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    setlocale(0, "");
+    int size;
+    printf("Ожидаю размер:");
+    std::cin >> size;
+
+    char croutch[size][size];
+    char *tmpArr[size];
+
+    for (size_t i = 0; i < size; ++i) {
+        tmpArr[i] = croutch[i];
+    }
+
+    mazeGenerator(tmpArr, size, size);
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            std::cout << tmpArr[i][j];
+        }
+        std::cout << "\n";
+    }
+
+    return 0;
+}
